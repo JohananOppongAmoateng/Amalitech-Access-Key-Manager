@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv("SECRET_KEY","django-insecure-9z+4ci&iqo+l4jnh99zytt5y09b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['amalitech-access-key-manager.onrender.com']
 
 
 # Application definition
