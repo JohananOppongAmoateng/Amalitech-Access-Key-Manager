@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+{% block meta_title %}{% if page %}{{ page.meta_title }}{% else %}{% trans "Log out || PyClubs" %}{% endif %}{% endblock %}
+
+
+{% block content %}
+
+<!-- ========== HEADER ========== -->
+{% include 'header.html' %}
+<!-- ========== END HEADER ========== -->
+
+<main>
+	<section class="p-0 d-flex align-items-center position-relative overflow-hidden">
+	
+		<div class="container-fluid">
+			<div class="row">
+				<!-- left -->
+				<div class="col-12 col-lg-6 d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10 vh-lg-100">
+					<div class="p-3 p-lg-5">
+						<!-- Title -->
+						<div class="text-center">
+							<h2 class="fw-bold">Welcome Back, Python Enthusiast! 🐍</h2>
+							<p class="mb-0 h6 fw-light">Log in to connect with your fellow club members, explore upcoming events, and access a treasure trove of Python resources!</p>
+						</div>
+						<!-- SVG Image -->
+						<img src="{% static 'assets/images/svg/undraw_sign_in.svg' %}" class="mt-3" alt="">
+						<!-- Info -->
+						<br>
+					</div>
+				</div>
+ 
+				<!-- Right -->
+				<div class="col-12 col-lg-6 m-auto">
+					<div class="row my-5">
+						<div class="col-sm-10 col-xl-8 m-auto">
+							<!-- Title -->
+							<span class="mb-0 fs-1"></span>
+							<h1 class="fs-2">Login</h1>
+							<p class="lead mb-4">Nice to see you!<br>Please log in with your account.</p>
+
+							<!-- Form START -->
+							<form  method="POST" action="{% url 'auth_login' %}">
+								<!-- Email -->
+								<div class="mb-4">  
+									{% csrf_token %}  
+									{{ form | crispy }} 
+								</div> 
+								<div class="mb-4 d-flex justify-content-between mb-4">
+									<div class="form-check"> 
+									</div>
+									<div class="text-primary-hover">
+										<a href="{% url 'auth_password_reset' %}" class="text-secondary">
+											<u>Forgot password?</u>
+										</a>
+									</div>
+								</div>
+								<!-- Button -->
+								<div class="align-items-center mt-0">
+									<div class="d-grid">
+										<button class="btn btn-primary mb-0" type="submit">Login</button>
+									</div>
+								</div>
+							</form>
+							<!-- Form END -->
+
+							<!-- Sign up link -->
+							<div class="mt-4 text-center">
+								<span>Don't have an account? <a href="{% url 'registration_register' %}"><b>Signup here</b></a></span>
+							</div>
+						</div>
+					</div> <!-- Row END -->
+				</div>
+			</div> <!-- Row END -->
+		</div>
+	</section>
+</main>
+
+
+
+
+
+
+ 
+ 
+{% endblock %}
+
+
+
+
+ 

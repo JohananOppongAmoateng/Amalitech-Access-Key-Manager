@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Access Key Manager</h1>
+
+<p> This is a simple access key manager application for the MicroFocus School Management Platform.</p>
+
+{% if messages %}
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+{% endfor %}
+{% endif %}
+
+<a class="btn btn-block btn-primary text-decoration-none" href="{% url 'create_access_key' %}">Create new Access Key</a>
+
+<h2>Events</h2>
+{% if events %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name
+            <th>
+            <th scope="col">Status</th>
+            <th scope="col">Procurement Date</th>
+            <th scope="col">Expiry Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for access_key in keys%}
+        <tr>
+            <td>{{ eaccess_key.name}}</td>
+            <td>{{ access_key.status }}</td>
+            <td>{{ access_key.procurement_date }}</td>
+            <td>{{ access_key.expiry_date }}</td>
+            </li>
+        </tr>
+        {% endfor %}
+
+
+    </tbody>
+</table>
+
+{% else %}
+<p>No access keys</p>
+{% endif %}
+{% endblock %}
