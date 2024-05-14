@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-9z+4ci&iqo+l4jnh99zytt5y09bgb$p%e__$hy1a^4ts)iuafn"
+SECRET_KEY = os.getenv("SECRET_KEY","django-insecure-9z+4ci&iqo+l4jnh99zytt5y09bgb$p%e__$hy1a^4ts)iuafn")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +39,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "registration",
+    "accesskey",
+    
+    'rest_framework',
+    'crispy_forms',
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -54,7 +62,9 @@ ROOT_URLCONF = "AccessKeyManager.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            os.path.join(BASE_DIR, "templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -117,7 +127,58 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "registration.CustomUser"
+
+LOGIN_REDIRECT_URL = '/'
+SIGNUP_REDIRECT_URL = '/accounts/login'
+LOGOUT_REDIRECT_URL = '/accounts/login'
+
+ACCOUNT_ACTIVATION_DAYS = 7
+
+EMAIL_HOST = "smtp"
+EMAIL_PORT = 587
+
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+# Registration App account settings
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_EMAIL_SUBJECT_PREFIX = "[Access Key Manager] "
+SEND_ACTIVATION_EMAIL = True
+
+
+
+HASHIDS_SALT = ("some_random_string",)
+
+# Using the new No Captcha reCaptcha
+NOCAPTCHA = True
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = False
+ACCOUNT_EMAIL_VERIFICATION = ("mandatory",)
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
+ACCOUNT_USERNAME_MIN_LENGTH = 3
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+CRONJOBS = [
+    ('0 0 * * *', 'accesskey.management.commands.update_expired_keys'),
+    
+]
