@@ -7,11 +7,7 @@ from .forms import CreateAccessKeyForm
 @login_required(login_url="/accounts/login/")
 def home(request):
     user = request.user
-    if user.is_staff:
-        keys = AccessKey.objects.all()
-    
-    else:
-        keys =  AccessKey.objects.filter(user=user)
+    keys =  AccessKey.objects.filter(user=user)
     context = {
         "keys" : keys
     }
@@ -28,8 +24,7 @@ def create_access_key(request):
             if not user.is_staff:
                 active_key = AccessKey.objects.filter(user=user,status="active").exists()
                 if active_key:
-                    """give user feed back that they cant create new token because  they already have an active key and render home page with the feedback
-                    """
+                    
                     messages.add_message(request,messages.INFO,"You already have an active key. You cannot create a new access key")
                     
                 else:
