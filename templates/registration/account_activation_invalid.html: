@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Activation link is invalid!</h2>
+{% endblock %}

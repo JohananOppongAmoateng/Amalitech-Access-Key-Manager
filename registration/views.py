@@ -1,41 +1,53 @@
-"""
-Views which allow users to create and activate accounts.
-
-""" 
-from django.shortcuts import render, redirect
-from .models  import AccountVerification
-from django.shortcuts import redirect
-from .forms import RegistrationForm
-from django.views.decorators.http import require_http_methods
+from django.shortcuts import render
+from django.views import View
+from .models import CustomUser,ActivationToken
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth import login
+from django.views.generic import TemplateView
+from .forms import SignUpForm
 
 
+class SignUpView(View):
+    form = SignUpForm
+    template_name = 'registration/register.html'
 
-@require_http_methods(["GET","POST"])
-def register(request):
-    if request.method == "GET":
-        form =  RegistrationForm()
-        return render(request,"registration/register.html",{"form":form})
-    else:
-        form =  RegistrationForm(request.POST)
+    def get(self, request):
+        form = self.form()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form(request.POST)
         if form.is_valid():
-            site = get_current_site(request)
-            new_user_instance = form.save(commit=False)
-            new_user = AccountVerification.objects.create_inactive_user(
-                new_user=new_user_instance,
-                site=site,
-                send_email=True,
-                request=request,
-        )
-            return redirect('registration_complete')
-        
+            user = CustomUser.objects.create_user(email=form.cleaned_data['email'], password=form.cleaned_data['password1'],is_active = False)
+            user.save()
+            token = ActivationToken.objects.create(user=user)
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your account.'
+            message = render_to_string('registration/activation_email.html', {
+                'user': user,
+                'site': current_site,
+                'domain': current_site.domain,
+                'token': token,
+            })
+            send_mail(mail_subject, message, None, [user.email])
+            return render(request, 'registration/registration_complete.html')
+        return render(request, self.template_name, {'form': form})
 
-@require_http_methods(["GET"])
-def activate(request,activation_key):
-    site = get_current_site(request)
-    user, activated = AccountVerification.objects.activate_user(
-            activation_key)
-    if activated:
-        login(request, user)
-        return redirect('registration_activation_complete')
+class ActivateAccount(TemplateView):
+    http_method_names = ['get']
+    template_name = 'registration/activate.html'
+    def get(self,request,token):
+        try:
+            token = ActivationToken.objects.get(token=token)
+            if not token.activated:
+                token.activated = True
+                token.user.is_active = True
+                token.user.save()
+                token.save()
+                return render(request, "registration/activation_complete.html", {'message': 'Account activated'})
+                
+            return render(request, "registration/activation_complete.html", {'message': 'Account already activated'})
+        except ActivationToken.DoesNotExist:
+            return render(request, self.template_name, {'message': 'Invalid token'})
+        
