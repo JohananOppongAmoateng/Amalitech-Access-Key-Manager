@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY","django-insecure-9z+4ci&iqo+l4jnh99zytt5y09bgb$p%e__$hy1a^4ts)iuafn")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG =  True
 
-ALLOWED_HOSTS = ['amalitech-access-key-manager.onrender.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "registration",
     "accesskey",
-    
+
+    'drf_spectacular',
     'rest_framework',
     'crispy_forms',
     "crispy_bootstrap5",
@@ -157,9 +159,8 @@ ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_EMAIL_SUBJECT_PREFIX = "[Access Key Manager] "
 SEND_ACTIVATION_EMAIL = True
 
+SITE_ID = 1
 
-
-HASHIDS_SALT = ("some_random_string",)
 
 # Using the new No Captcha reCaptcha
 NOCAPTCHA = True
@@ -182,3 +183,17 @@ CRONJOBS = [
     ('0 0 * * *', 'accesskey.management.commands.update_expired_keys'),
     
 ]
+DEFAULT_FROM_EMAIL = "johananoppongamoateng2001@gmail.com"
+
+
+REST_FRAMEWORK = {
+    # YOUR SETTINGS
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Access Key Manager API',
+    'DESCRIPTION': 'API for Access Key Manager',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
