@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap5",
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -88,7 +89,7 @@ WSGI_APPLICATION = "AccessKeyManager.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / "prod.sqlite3",
     }
 }
 
@@ -159,7 +160,7 @@ ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_EMAIL_SUBJECT_PREFIX = "[Access Key Manager] "
 SEND_ACTIVATION_EMAIL = True
 
-SITE_ID = 1
+
 
 
 # Using the new No Captcha reCaptcha
