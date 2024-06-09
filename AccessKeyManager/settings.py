@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+# Import dj-database-url at the beginning of the file.
+import dj_database_url
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -91,14 +93,8 @@ DATABASES = {
     #     "ENGINE": "django.db.backends.sqlite3",
     #     "NAME": BASE_DIR / "prod.sqlite3",
     # }
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DBNAME"),                      
-        'USER': os.getenv("DBUSER"), 
-        'PASSWORD': os.getenv("DBPASSWORD"),
-        'HOST': os.getenv("DBHOST"),
-        'PORT': os.getenv("DBPORT"),
-    }
+    # 
+    'default': dj_database_url.config(default="postgres://johanan:wnE9F8l27fLfbaiVA2uNE7LlqSjXlCxs@dpg-cpie6tmct0pc73fql94g-a/akm",conn_max_age=600)
 }
 
 
