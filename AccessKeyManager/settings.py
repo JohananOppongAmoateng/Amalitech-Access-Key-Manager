@@ -94,7 +94,7 @@ DATABASES = {
     #     "NAME": BASE_DIR / "prod.sqlite3",
     # }
     # 
-    'default': dj_database_url.config(default="postgres://johanan:wnE9F8l27fLfbaiVA2uNE7LlqSjXlCxs@dpg-cpie6tmct0pc73fql94g-a.oregon-postgres.render.com/akm",conn_max_age=600)
+    'default': dj_database_url.config(default=os.getenv("DB_URL"),conn_max_age=600)
 }
 
 
